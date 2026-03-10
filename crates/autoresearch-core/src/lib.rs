@@ -1,4 +1,6 @@
 pub mod config;
+#[cfg(feature = "train")]
+pub mod dataloader;
 pub mod download;
 pub mod parquet_text;
 pub mod prepare;
@@ -6,6 +8,8 @@ pub mod report;
 pub mod tokenizer;
 
 pub use config::{CachePaths, CoreConstants, PrepareConfig, TrainConfig};
+#[cfg(feature = "train")]
+pub use dataloader::{PackedBatchLoader, Split};
 pub use download::{download_data, DownloadReport};
 pub use parquet_text::{
     collect_training_documents, list_parquet_files, read_text_column, split_train_val_paths,
