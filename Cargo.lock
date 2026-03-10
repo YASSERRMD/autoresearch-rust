@@ -168,6 +168,7 @@ name = "autoresearch-core"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "arrow-array",
  "dirs",
  "parquet",
  "rayon",

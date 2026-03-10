@@ -8,6 +8,7 @@ repository.workspace = true
 
 [dependencies]
 anyhow.workspace = true
+arrow-array = "54.3"
 dirs = "6.0"
 parquet = { version = "54.3", default-features = false, features = ["arrow"] }
 rayon = "1.11"
