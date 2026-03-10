@@ -15,5 +15,6 @@ rayon = "1.11"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
 serde.workspace = true
 serde_json.workspace = true
+tokenizers = { version = "0.22", default-features = false, features = ["esaxx_fast", "fancy-regex"] }
 thiserror.workspace = true
 tracing.workspace = true
