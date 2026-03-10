@@ -27,6 +27,9 @@ impl Default for CoreConstants {
     }
 }
 
+pub const DEFAULT_DATASET_BASE_URL: &str =
+    "https://huggingface.co/datasets/karpathy/climbmix-400b-shuffle/resolve/main";
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CachePaths {
     pub cache_dir: PathBuf,
@@ -87,6 +90,17 @@ impl Default for PrepareConfig {
             max_chars_for_tokenizer: 1_000_000_000,
             doc_char_cap: 10_000,
         }
+    }
+}
+
+impl PrepareConfig {
+    pub fn required_shard_ids(&self, constants: CoreConstants) -> Vec<usize> {
+        let num_train = self.num_shards.min(constants.max_shard);
+        let mut ids: Vec<usize> = (0..num_train).collect();
+        if !ids.contains(&constants.val_shard) {
+            ids.push(constants.val_shard);
+        }
+        ids
     }
 }
 

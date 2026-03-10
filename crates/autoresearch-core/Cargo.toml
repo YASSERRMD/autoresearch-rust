@@ -9,6 +9,9 @@ repository.workspace = true
 [dependencies]
 anyhow.workspace = true
 dirs = "6.0"
+parquet = { version = "54.3", default-features = false, features = ["arrow"] }
+rayon = "1.11"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
