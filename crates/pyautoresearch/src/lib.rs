@@ -87,7 +87,7 @@ impl AutoResearch {
     }
 
     #[allow(clippy::too_many_arguments)]
-    #[pyo3(signature = (depth=None, total_batch_size=None, device_batch_size=None, eval_batch_size=None, learning_rate=None, weight_decay=None, accelerator_cmd=None))]
+    #[pyo3(signature = (depth=None, total_batch_size=None, device_batch_size=None, eval_batch_size=None, learning_rate=None, weight_decay=None, accelerator_cmd=None, inference_accelerator_cmd=None))]
     fn train(
         &self,
         depth: Option<usize>,
@@ -97,6 +97,7 @@ impl AutoResearch {
         learning_rate: Option<f64>,
         weight_decay: Option<f64>,
         accelerator_cmd: Option<String>,
+        inference_accelerator_cmd: Option<String>,
     ) -> PyResult<PyRunSummary> {
         train(
             self.cache_dir.clone(),
@@ -107,6 +108,7 @@ impl AutoResearch {
             learning_rate,
             weight_decay,
             accelerator_cmd,
+            inference_accelerator_cmd,
         )
     }
 }
@@ -146,7 +148,7 @@ fn prepare(
 
 #[pyfunction]
 #[allow(clippy::too_many_arguments)]
-#[pyo3(signature = (cache_dir=None, depth=None, total_batch_size=None, device_batch_size=None, eval_batch_size=None, learning_rate=None, weight_decay=None, accelerator_cmd=None))]
+#[pyo3(signature = (cache_dir=None, depth=None, total_batch_size=None, device_batch_size=None, eval_batch_size=None, learning_rate=None, weight_decay=None, accelerator_cmd=None, inference_accelerator_cmd=None))]
 fn train(
     cache_dir: Option<String>,
     depth: Option<usize>,
@@ -156,6 +158,7 @@ fn train(
     learning_rate: Option<f64>,
     weight_decay: Option<f64>,
     accelerator_cmd: Option<String>,
+    inference_accelerator_cmd: Option<String>,
 ) -> PyResult<PyRunSummary> {
     let paths = resolve_paths(cache_dir).map_err(to_py_err)?;
     let constants = CoreConstants::default();
@@ -180,6 +183,7 @@ fn train(
         cfg.weight_decay = v;
     }
     cfg.accelerator_cmd = accelerator_cmd;
+    cfg.inference_accelerator_cmd = inference_accelerator_cmd;
 
     let summary = run_train(&paths, constants, &cfg).map_err(to_py_err)?;
     Ok(summary.into())
