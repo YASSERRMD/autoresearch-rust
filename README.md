@@ -107,15 +107,6 @@ print(result.val_bpb)
 - Tokenizer and parquet ingestion are CPU-bound; run on a machine with high memory bandwidth
 - Training backend is Candle; this repo currently defaults to CPU device selection in code for portability
 
-## About `YASSERRMD/BarqTrain`
-
-This repo supports optional integration with [YASSERRMD/BarqTrain](https://github.com/YASSERRMD/BarqTrain) through:
-
-- `--accelerator-cmd` (CLI) / `accelerator_cmd` (Python) for training setup
-- `--inference-accelerator-cmd` (CLI) / `inference_accelerator_cmd` (Python) for inference/evaluation setup
-
-Appreciation: thanks to `YASSERRMD` for publishing BarqTrain.
-
 ## License
 
 MIT (see `LICENSE`)
