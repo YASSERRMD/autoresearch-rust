@@ -6,6 +6,11 @@ license.workspace = true
 authors.workspace = true
 repository.workspace = true
 
+[lib]
+name = "pyautoresearch"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 anyhow.workspace = true
-autoresearch-core = { path = "../autoresearch-core" }
+autoresearch-core = { path = "../autoresearch-core", features = ["train"] }
+pyo3 = { version = "0.23", features = ["extension-module", "abi3-py39"] }
