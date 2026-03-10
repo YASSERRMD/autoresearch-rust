@@ -54,7 +54,7 @@ cargo run -p autoresearch-cli --features train -- train \
   --eval-batch-size 128 \
   --learning-rate 0.0004 \
   --weight-decay 0.1 \
-  --accelerator-cmd "groqtrain --warmup"
+  --accelerator-cmd "barqtrain --warmup"
 ```
 
 ## Python usage
@@ -77,7 +77,7 @@ print(prep.vocab_size, prep.ready_shards)
 run = pyautoresearch.train(
     depth=8,
     total_batch_size=2**19,
-    accelerator_cmd="groqtrain --warmup",
+    accelerator_cmd="barqtrain --warmup",
 )
 print(run.val_bpb, run.training_seconds)
 ```
@@ -100,9 +100,11 @@ print(result.val_bpb)
 - Tokenizer and parquet ingestion are CPU-bound; run on a machine with high memory bandwidth
 - Training backend is Candle; this repo currently defaults to CPU device selection in code for portability
 
-## About `yasserrmd/groqtrain`
+## About `YASSERRMD/BarqTrain`
 
-A direct GitHub clone attempt for `https://github.com/yasserrmd/groqtrain` returned `Repository not found`. To keep this usable, training supports an optional external accelerator command (`--accelerator-cmd` in CLI, `accelerator_cmd` in Python) that runs before the training loop.
+This repo supports optional integration with [YASSERRMD/BarqTrain](https://github.com/YASSERRMD/BarqTrain) through `--accelerator-cmd` (CLI) or `accelerator_cmd` (Python), which runs before the training loop.
+
+Appreciation: thanks to `YASSERRMD` for publishing BarqTrain.
 
 ## License
 
