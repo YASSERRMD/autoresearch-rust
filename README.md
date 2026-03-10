@@ -53,7 +53,8 @@ cargo run -p autoresearch-cli --features train -- train \
   --device-batch-size 128 \
   --eval-batch-size 128 \
   --learning-rate 0.0004 \
-  --weight-decay 0.1
+  --weight-decay 0.1 \
+  --accelerator-cmd "groqtrain --warmup"
 ```
 
 ## Python usage
@@ -73,7 +74,11 @@ import pyautoresearch
 prep = pyautoresearch.prepare(num_shards=10, download_workers=8)
 print(prep.vocab_size, prep.ready_shards)
 
-run = pyautoresearch.train(depth=8, total_batch_size=2**19)
+run = pyautoresearch.train(
+    depth=8,
+    total_batch_size=2**19,
+    accelerator_cmd="groqtrain --warmup",
+)
 print(run.val_bpb, run.training_seconds)
 ```
 
@@ -97,7 +102,7 @@ print(result.val_bpb)
 
 ## About `yasserrmd/groqtrain`
 
-A direct GitHub clone attempt for `https://github.com/yasserrmd/groqtrain` returned `Repository not found`, so automatic integration is not included in this branch.
+A direct GitHub clone attempt for `https://github.com/yasserrmd/groqtrain` returned `Repository not found`. To keep this usable, training supports an optional external accelerator command (`--accelerator-cmd` in CLI, `accelerator_cmd` in Python) that runs before the training loop.
 
 ## License
 

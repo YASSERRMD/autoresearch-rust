@@ -42,6 +42,8 @@ enum Commands {
         learning_rate: Option<f64>,
         #[arg(long)]
         weight_decay: Option<f64>,
+        #[arg(long)]
+        accelerator_cmd: Option<String>,
     },
 }
 
@@ -65,6 +67,7 @@ fn main() -> Result<()> {
             eval_batch_size,
             learning_rate,
             weight_decay,
+            accelerator_cmd,
         } => run_train_command(
             cache_dir,
             depth,
@@ -73,6 +76,7 @@ fn main() -> Result<()> {
             eval_batch_size,
             learning_rate,
             weight_decay,
+            accelerator_cmd,
         ),
     }
 }
@@ -130,6 +134,7 @@ fn run_train_command(
     eval_batch_size: Option<usize>,
     learning_rate: Option<f64>,
     weight_decay: Option<f64>,
+    accelerator_cmd: Option<String>,
 ) -> Result<()> {
     let paths = match cache_dir {
         Some(path) => CachePaths::from_cache_dir(path),
@@ -156,6 +161,7 @@ fn run_train_command(
     if let Some(v) = weight_decay {
         train.weight_decay = v;
     }
+    train.accelerator_cmd = accelerator_cmd;
 
     let summary = run_train(&paths, constants, &train)?;
     println!("{}", summary.as_pretty_block());
