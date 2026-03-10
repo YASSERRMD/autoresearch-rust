@@ -117,6 +117,7 @@ pub struct TrainConfig {
     pub warmup_ratio: f64,
     pub warmdown_ratio: f64,
     pub final_lr_fraction: f64,
+    pub accelerator_cmd: Option<String>,
 }
 
 impl Default for TrainConfig {
@@ -133,6 +134,7 @@ impl Default for TrainConfig {
             warmup_ratio: 0.0,
             warmdown_ratio: 0.5,
             final_lr_fraction: 0.0,
+            accelerator_cmd: None,
         }
     }
 }

@@ -1,5 +1,7 @@
 pub mod config;
 #[cfg(feature = "train")]
+pub mod accelerator;
+#[cfg(feature = "train")]
 pub mod dataloader;
 pub mod download;
 #[cfg(feature = "train")]
@@ -12,6 +14,8 @@ pub mod tokenizer;
 pub mod train;
 
 pub use config::{CachePaths, CoreConstants, PrepareConfig, TrainConfig};
+#[cfg(feature = "train")]
+pub use accelerator::maybe_run_accelerator;
 #[cfg(feature = "train")]
 pub use dataloader::{PackedBatchLoader, Split};
 pub use download::{download_data, DownloadReport};

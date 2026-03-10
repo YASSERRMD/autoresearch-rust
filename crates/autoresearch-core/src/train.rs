@@ -8,6 +8,7 @@ use anyhow::{bail, Result};
 use candle_core::{DType, Device};
 use candle_nn::optim::{AdamW, Optimizer, ParamsAdamW};
 
+use crate::accelerator::maybe_run_accelerator;
 use crate::config::{CachePaths, CoreConstants, TrainConfig};
 use crate::dataloader::{PackedBatchLoader, Split};
 use crate::model::{GptModel, GptModelConfig};
@@ -22,6 +23,7 @@ pub fn run_train(
     train: &TrainConfig,
 ) -> Result<RunSummary> {
     let overall_start = Instant::now();
+    maybe_run_accelerator(train.accelerator_cmd.as_deref())?;
     let device = Arc::new(Device::Cpu);
 
     let tokenizer = RuntimeTokenizer::from_cache(paths)?;
