@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use autoresearch_core::{run_prepare, CachePaths, CoreConstants, PrepareConfig};
+#[cfg(feature = "train")]
+use autoresearch_core::{run_train, TrainConfig};
 use clap::{Parser, Subcommand};
 use tracing_subscriber::EnvFilter;
 
@@ -23,6 +25,24 @@ enum Commands {
         #[arg(long)]
         download_workers: Option<usize>,
     },
+    /// Run a fixed-budget Rust training run.
+    #[cfg(feature = "train")]
+    Train {
+        #[arg(long)]
+        cache_dir: Option<PathBuf>,
+        #[arg(long)]
+        depth: Option<usize>,
+        #[arg(long)]
+        total_batch_size: Option<usize>,
+        #[arg(long)]
+        device_batch_size: Option<usize>,
+        #[arg(long)]
+        eval_batch_size: Option<usize>,
+        #[arg(long)]
+        learning_rate: Option<f64>,
+        #[arg(long)]
+        weight_decay: Option<f64>,
+    },
 }
 
 fn main() -> Result<()> {
@@ -36,6 +56,24 @@ fn main() -> Result<()> {
             num_shards,
             download_workers,
         } => run_prepare_command(cache_dir, num_shards, download_workers),
+        #[cfg(feature = "train")]
+        Commands::Train {
+            cache_dir,
+            depth,
+            total_batch_size,
+            device_batch_size,
+            eval_batch_size,
+            learning_rate,
+            weight_decay,
+        } => run_train_command(
+            cache_dir,
+            depth,
+            total_batch_size,
+            device_batch_size,
+            eval_batch_size,
+            learning_rate,
+            weight_decay,
+        ),
     }
 }
 
@@ -79,5 +117,47 @@ fn run_prepare_command(
         summary.tokenizer.trained_docs
     );
 
+    Ok(())
+}
+
+#[cfg(feature = "train")]
+#[allow(clippy::too_many_arguments)]
+fn run_train_command(
+    cache_dir: Option<PathBuf>,
+    depth: Option<usize>,
+    total_batch_size: Option<usize>,
+    device_batch_size: Option<usize>,
+    eval_batch_size: Option<usize>,
+    learning_rate: Option<f64>,
+    weight_decay: Option<f64>,
+) -> Result<()> {
+    let paths = match cache_dir {
+        Some(path) => CachePaths::from_cache_dir(path),
+        None => CachePaths::new_default().context("failed to resolve default cache directory")?,
+    };
+    let constants = CoreConstants::default();
+
+    let mut train = TrainConfig::default();
+    if let Some(v) = depth {
+        train.depth = v;
+    }
+    if let Some(v) = total_batch_size {
+        train.total_batch_size = v;
+    }
+    if let Some(v) = device_batch_size {
+        train.device_batch_size = v;
+    }
+    if let Some(v) = eval_batch_size {
+        train.eval_batch_size = v;
+    }
+    if let Some(v) = learning_rate {
+        train.learning_rate = v;
+    }
+    if let Some(v) = weight_decay {
+        train.weight_decay = v;
+    }
+
+    let summary = run_train(&paths, constants, &train)?;
+    println!("{}", summary.as_pretty_block());
     Ok(())
 }

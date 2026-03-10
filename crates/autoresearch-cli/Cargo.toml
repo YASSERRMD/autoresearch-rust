@@ -6,6 +6,10 @@ license.workspace = true
 authors.workspace = true
 repository.workspace = true
 
+[features]
+default = []
+train = ["autoresearch-core/train"]
+
 [dependencies]
 anyhow.workspace = true
 autoresearch-core = { path = "../autoresearch-core" }
