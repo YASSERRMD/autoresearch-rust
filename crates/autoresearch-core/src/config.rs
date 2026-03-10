@@ -107,8 +107,11 @@ impl PrepareConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TrainConfig {
     pub depth: usize,
+    pub aspect_ratio: usize,
+    pub head_dim: usize,
     pub total_batch_size: usize,
     pub device_batch_size: usize,
+    pub eval_batch_size: usize,
     pub learning_rate: f64,
     pub weight_decay: f64,
     pub warmup_ratio: f64,
@@ -120,8 +123,11 @@ impl Default for TrainConfig {
     fn default() -> Self {
         Self {
             depth: 8,
+            aspect_ratio: 64,
+            head_dim: 128,
             total_batch_size: 1 << 19,
             device_batch_size: 128,
+            eval_batch_size: 128,
             learning_rate: 4e-4,
             weight_decay: 0.1,
             warmup_ratio: 0.0,
