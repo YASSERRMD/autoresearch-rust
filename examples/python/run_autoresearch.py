@@ -12,7 +12,8 @@ def main() -> None:
         eval_batch_size=128,
         learning_rate=4e-4,
         weight_decay=0.1,
-        accelerator_cmd="barqtrain --warmup",
+        accelerator_cmd="barqtrain --warmup --mode train",
+        inference_accelerator_cmd="barqtrain --warmup --mode inference",
     )
     print(f"val_bpb={result.val_bpb:.6f} steps={result.num_steps} seconds={result.training_seconds:.1f}")
 

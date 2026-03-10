@@ -15,7 +15,7 @@ pub mod train;
 
 pub use config::{CachePaths, CoreConstants, PrepareConfig, TrainConfig};
 #[cfg(feature = "train")]
-pub use accelerator::maybe_run_accelerator;
+pub use accelerator::{maybe_run_accelerator, AcceleratorPhase};
 #[cfg(feature = "train")]
 pub use dataloader::{PackedBatchLoader, Split};
 pub use download::{download_data, DownloadReport};

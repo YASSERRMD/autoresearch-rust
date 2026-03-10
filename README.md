@@ -2,6 +2,10 @@
 
 Rust-first implementation of `karpathy/autoresearch` with Python bindings.
 
+## Appreciation
+
+This project is built on the ideas and baseline workflow from [`karpathy/autoresearch`](https://github.com/karpathy/autoresearch). Appreciation to Andrej Karpathy for open-sourcing the original project.
+
 ## What this repo provides
 
 - High-throughput data preparation in Rust:
@@ -13,6 +17,7 @@ Rust-first implementation of `karpathy/autoresearch` with Python bindings.
   - packed BOS-aligned dataloader
   - fixed time-budget training loop
   - BPB evaluation metric
+  - optional external acceleration hook for training and inference stages
 - Python FFI via `pyo3`:
   - `prepare(...)` and `train(...)`
   - object-oriented `AutoResearch` API
@@ -54,7 +59,8 @@ cargo run -p autoresearch-cli --features train -- train \
   --eval-batch-size 128 \
   --learning-rate 0.0004 \
   --weight-decay 0.1 \
-  --accelerator-cmd "barqtrain --warmup"
+  --accelerator-cmd "barqtrain --warmup --mode train" \
+  --inference-accelerator-cmd "barqtrain --warmup --mode inference"
 ```
 
 ## Python usage
@@ -77,7 +83,8 @@ print(prep.vocab_size, prep.ready_shards)
 run = pyautoresearch.train(
     depth=8,
     total_batch_size=2**19,
-    accelerator_cmd="barqtrain --warmup",
+    accelerator_cmd="barqtrain --warmup --mode train",
+    inference_accelerator_cmd="barqtrain --warmup --mode inference",
 )
 print(run.val_bpb, run.training_seconds)
 ```
@@ -102,7 +109,10 @@ print(result.val_bpb)
 
 ## About `YASSERRMD/BarqTrain`
 
-This repo supports optional integration with [YASSERRMD/BarqTrain](https://github.com/YASSERRMD/BarqTrain) through `--accelerator-cmd` (CLI) or `accelerator_cmd` (Python), which runs before the training loop.
+This repo supports optional integration with [YASSERRMD/BarqTrain](https://github.com/YASSERRMD/BarqTrain) through:
+
+- `--accelerator-cmd` (CLI) / `accelerator_cmd` (Python) for training setup
+- `--inference-accelerator-cmd` (CLI) / `inference_accelerator_cmd` (Python) for inference/evaluation setup
 
 Appreciation: thanks to `YASSERRMD` for publishing BarqTrain.
 
