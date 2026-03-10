@@ -1,4 +1,5 @@
 tmp/
+PHASES.md
 target/
 __pycache__/
 .pytest_cache/
